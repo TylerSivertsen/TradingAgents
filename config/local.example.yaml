@@ -1,0 +1,9 @@
+alpaca:
+  api_key_env: ALPACA_API_KEY
+  secret_key_env: ALPACA_SECRET_KEY
+  paper: true
+runtime:
+  default_mode: dry_run
+universe:
+  seed_symbols: []
+  excluded_symbols: []

@@ -106,6 +106,35 @@ python -m tradingagents.alpaca_daytrader experiment-list
 python -m tradingagents.alpaca_daytrader experiment-show <id>
 ```
 
+## Docker Compose Runtime
+
+Build once:
+
+```bash
+docker compose build
+```
+
+Then run the same canonical runtime inside the container:
+
+```bash
+docker compose run --rm trader diagnostics
+docker compose run --rm trader universe-scan
+docker compose run --rm trader quant-once --dry-run
+docker compose run --rm trader quant-once --review
+docker compose run --rm trader quant-run --shadow --iterations 3
+docker compose run --rm trader quant-report
+docker compose run --rm tests
+docker compose up trader-tui
+```
+
+Host directories are mounted into the container:
+
+- `./logs:/app/logs`
+- `./reports:/app/reports`
+- `./data:/app/data`
+- `./audit:/app/audit`
+- `./experiments:/app/experiments`
+
 ## Troubleshooting
 
 - If the focus list is empty, inspect `reports/universe/YYYY-MM-DD.md`.

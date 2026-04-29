@@ -1,31 +1,26 @@
-FROM python:3.12-slim AS builder
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
-
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-
-WORKDIR /build
-COPY . .
-RUN pip install --no-cache-dir .
-
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
-COPY --from=builder /opt/venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+RUN useradd --create-home appuser
 
-RUN useradd --create-home appuser \
-    && mkdir -p /home/appuser/.tradingagents/cache \
-        /home/appuser/.tradingagents/logs \
-        /home/appuser/.tradingagents/memory \
-    && chown -R appuser:appuser /home/appuser/.tradingagents
+WORKDIR /app
+COPY pyproject.toml README.md ./
+COPY tradingagents ./tradingagents
+COPY cli ./cli
+COPY tests ./tests
+COPY configs ./configs
+COPY config ./config
+COPY README_ALPACA_DAYTRADER.md README_QUANT_ORIA.md README_MARKET_UNIVERSE.md README_RISK_CONTROLS.md ./
+
+RUN pip install --no-cache-dir -e . pytest
+
+RUN mkdir -p /app/logs /app/reports /app/data /app/audit /app/experiments/results \
+    && chown -R appuser:appuser /app
+
 USER appuser
-WORKDIR /home/appuser/app
 
-COPY --from=builder --chown=appuser:appuser /build .
-
-ENTRYPOINT ["tradingagents"]
+ENTRYPOINT ["python", "-m", "tradingagents.alpaca_daytrader"]
+CMD ["diagnostics"]

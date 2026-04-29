@@ -38,6 +38,14 @@ python -m tradingagents.alpaca_daytrader cancel-all
 python -m tradingagents.alpaca_daytrader flatten --paper-only
 ```
 
+Docker equivalents:
+
+```bash
+docker compose run --rm trader kill
+docker compose run --rm trader cancel-all
+docker compose run --rm trader flatten --paper-only
+```
+
 These commands are safe by default in this implementation. Real order
 cancellation/flattening should be wired only after account-state reconciliation
 and human review are in place.

@@ -11,5 +11,8 @@ build
 dist
 results
 eval_results
-Dockerfile
-docker-compose.yml
+logs
+reports
+data/universe
+audit
+experiments/results/*.json

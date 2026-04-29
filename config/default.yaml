@@ -1,0 +1,19 @@
+alpaca:
+  paper: true
+runtime:
+  default_mode: dry_run
+universe:
+  enabled: true
+  max_scan_symbols: 3000
+  max_focus_symbols: 25
+quant:
+  enabled: true
+  max_gross_exposure: 1.0
+  max_net_exposure: 0.5
+  min_cash_weight: 0.10
+execution:
+  allow_market_orders: false
+  prefer_limit_orders: true
+reporting:
+  logs_dir: logs
+  reports_dir: reports

@@ -1,35 +1,50 @@
 services:
-  tradingagents:
+  trader:
     build: .
     env_file:
       - .env
     volumes:
-      - tradingagents_data:/home/appuser/.tradingagents
-    tty: true
+      - ./logs:/app/logs
+      - ./reports:/app/reports
+      - ./data:/app/data
+      - ./audit:/app/audit
+      - ./experiments:/app/experiments
+    command: ["diagnostics"]
     stdin_open: true
+    tty: true
 
-  ollama:
-    image: ollama/ollama:latest
-    volumes:
-      - ollama_data:/root/.ollama
-    profiles:
-      - ollama
-
-  tradingagents-ollama:
+  trader-tui:
     build: .
     env_file:
       - .env
-    environment:
-      - LLM_PROVIDER=ollama
     volumes:
-      - tradingagents_data:/home/appuser/.tradingagents
-    depends_on:
-      - ollama
-    tty: true
+      - ./logs:/app/logs
+      - ./reports:/app/reports
+      - ./data:/app/data
+      - ./audit:/app/audit
+      - ./experiments:/app/experiments
+    command: ["tui"]
     stdin_open: true
-    profiles:
-      - ollama
+    tty: true
 
-volumes:
-  tradingagents_data:
-  ollama_data:
+  trader-shadow:
+    build: .
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/app/logs
+      - ./reports:/app/reports
+      - ./data:/app/data
+      - ./audit:/app/audit
+      - ./experiments:/app/experiments
+    command: ["quant-run", "--shadow"]
+    stdin_open: true
+    tty: true
+
+  tests:
+    build: .
+    env_file:
+      - .env.example
+    volumes:
+      - .:/app
+    command: ["test"]

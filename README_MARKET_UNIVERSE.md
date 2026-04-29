@@ -42,9 +42,36 @@ what ORIA analyzes deeply.
 
 ## Commands
 
+Run this before a quant pass to see which symbols the system would consider:
+
 ```bash
 python -m tradingagents.alpaca_daytrader universe-scan
 python -m tradingagents.alpaca_daytrader universe-report
 ```
 
 Universe reports are written to `reports/universe/YYYY-MM-DD.md`.
+
+Useful environment settings:
+
+```env
+UNIVERSE_MAX_SCAN_SYMBOLS=3000
+UNIVERSE_MAX_FOCUS_SYMBOLS=25
+UNIVERSE_SEED_SYMBOLS=
+UNIVERSE_EXCLUDED_SYMBOLS=
+UNIVERSE_MIN_PRICE=2.0
+UNIVERSE_MAX_PRICE=1000.0
+UNIVERSE_MIN_INTRADAY_VOLUME=100000
+UNIVERSE_MAX_SPREAD_BPS=30
+UNIVERSE_MIN_ATR_PCT=0.005
+UNIVERSE_MAX_ATR_PCT=0.12
+```
+
+For a faster development scan:
+
+```bash
+UNIVERSE_MAX_SCAN_SYMBOLS=100 UNIVERSE_MAX_FOCUS_SYMBOLS=10 \
+python -m tradingagents.alpaca_daytrader universe-scan
+```
+
+If the focus list is empty, lower the scan constraints only for research, then
+inspect the rejection breakdown in the universe report.

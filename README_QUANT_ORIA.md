@@ -50,6 +50,18 @@ risk constraints are enforced by deterministic code.
 
 ## Commands
 
+Recommended operating sequence:
+
+```bash
+pip install -e .
+python -m tradingagents.alpaca_daytrader quant-diagnostics
+python -m tradingagents.alpaca_daytrader universe-scan
+python -m tradingagents.alpaca_daytrader quant-once --dry-run
+python -m tradingagents.alpaca_daytrader quant-report
+```
+
+Available quant commands:
+
 ```bash
 python -m tradingagents.alpaca_daytrader quant-once --dry-run
 python -m tradingagents.alpaca_daytrader quant-once --review
@@ -60,6 +72,19 @@ python -m tradingagents.alpaca_daytrader quant-report
 python -m tradingagents.alpaca_daytrader quant-backtest --symbols AAPL,MSFT,NVDA --periods 180
 python -m tradingagents.alpaca_daytrader quant-walkforward --train-days 60 --test-days 10
 python -m tradingagents.alpaca_daytrader quant-diagnostics
+```
+
+Mode meanings:
+
+- `--dry-run`: one analysis pass, no paper orders submitted.
+- `--review`: asks for human approval before paper execution.
+- `--shadow`: continuous simulated operation, no order submission.
+- `--execute`: automatic Alpaca paper execution after code risk checks.
+
+Use `--iterations` with `quant-run` while testing:
+
+```bash
+python -m tradingagents.alpaca_daytrader quant-run --shadow --iterations 5
 ```
 
 ## Safety
@@ -80,3 +105,6 @@ Quant logs are written to:
 - `logs/quant/execution/YYYY-MM-DD.jsonl`
 - `reports/quant/YYYY-MM-DD.md`
 - `reports/quant/backtests/<timestamp>.md`
+
+Read the Markdown report first. The JSONL logs are better for debugging exact
+stage payloads and experiment reproducibility.

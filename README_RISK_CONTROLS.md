@@ -23,6 +23,15 @@ keeps hard risk constraints in deterministic code.
 
 ## Commands
 
+Inspect risk decisions through the quant report:
+
+```bash
+python -m tradingagents.alpaca_daytrader quant-once --dry-run
+python -m tradingagents.alpaca_daytrader quant-report
+```
+
+Paper-safe operational commands:
+
 ```bash
 python -m tradingagents.alpaca_daytrader kill
 python -m tradingagents.alpaca_daytrader cancel-all
@@ -32,3 +41,15 @@ python -m tradingagents.alpaca_daytrader flatten --paper-only
 These commands are safe by default in this implementation. Real order
 cancellation/flattening should be wired only after account-state reconciliation
 and human review are in place.
+
+Common RiskBox reason codes to look for in reports:
+
+- `MARKET_CLOSED`: execution is blocked outside market hours.
+- `DAILY_LOSS`: daily loss limit breached.
+- `DRAWDOWN`: session drawdown limit breached.
+- `SPREAD`: spread is too wide.
+- `LIQUIDITY`: missing liquidity or price.
+- `POSITION_SIZE`: target position clipped to max weight.
+- `GROSS_EXPOSURE`: book scaled to gross exposure cap.
+- `NET_EXPOSURE`: book scaled to net exposure cap.
+- `STRESS_SCALE`: stress tests reduced the feasible book.

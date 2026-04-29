@@ -65,6 +65,25 @@ TradingAgents is a multi-agent trading framework that mirrors the dynamics of re
 
 > TradingAgents framework is designed for research purposes. Trading performance may vary based on many factors, including the chosen backbone language models, model temperature, trading periods, the quality of data, and other non-deterministic factors. [It is not intended as financial, investment, or trading advice.](https://tauric.ai/disclaimer/)
 
+## Alpaca Daytrader Run Guides
+
+The Alpaca/ORIA research system has dedicated operator guides:
+
+- [README_ALPACA_DAYTRADER.md](README_ALPACA_DAYTRADER.md): install, environment setup, dry-run, review, shadow, and paper execution commands.
+- [README_MARKET_UNIVERSE.md](README_MARKET_UNIVERSE.md): dynamic universe discovery, scanner filters, focus lists, and universe reports.
+- [README_QUANT_ORIA.md](README_QUANT_ORIA.md): ORIA strategy sleeves, orthogonalization, allocation, backtesting, and walk-forward commands.
+- [README_RISK_CONTROLS.md](README_RISK_CONTROLS.md): RiskBox, stress tests, no-trade behavior, and paper-safe circuit breaker commands.
+
+Safe first run from Git Bash:
+
+```bash
+pip install -e .
+python -m tradingagents.alpaca_daytrader quant-diagnostics
+python -m tradingagents.alpaca_daytrader universe-scan
+python -m tradingagents.alpaca_daytrader quant-once --dry-run
+python -m tradingagents.alpaca_daytrader quant-report
+```
+
 Our framework decomposes complex trading tasks into specialized roles. This ensures the system achieves a robust, scalable approach to market analysis and decision-making.
 
 ### Analyst Team

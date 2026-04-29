@@ -1,0 +1,39 @@
+[quant]
+enabled = true
+symbols = ["AAPL", "MSFT", "NVDA", "SPY"]
+max_gross_exposure = 1.0
+max_net_exposure = 0.5
+max_position_weight = 0.15
+max_sleeve_weight = 0.35
+min_cash_weight = 0.10
+target_volatility = 0.15
+max_daily_loss_pct = 0.02
+max_turnover_per_day = 0.50
+covariance_lookback_bars = 120
+return_lookback_bars = 60
+
+[quant.execution]
+max_participation_rate = 0.05
+max_spread_bps = 20
+prefer_limit_orders = true
+allow_market_orders = false
+
+[quant.sleeves.momentum]
+enabled = true
+lookback_bars = 30
+
+[quant.sleeves.mean_reversion]
+enabled = true
+lookback_bars = 60
+entry_z = 2.0
+exit_z = 0.5
+
+[quant.sleeves.volatility_breakout]
+enabled = true
+atr_lookback = 14
+
+[quant.sleeves.minimum_variance]
+enabled = true
+
+[quant.sleeves.cash]
+enabled = true

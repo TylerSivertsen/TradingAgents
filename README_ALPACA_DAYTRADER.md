@@ -18,3 +18,12 @@ Dry-run is the default. Execution requires `ALPACA_API_KEY`,
 
 Runtime logs are written under `logs/`, and reports are written under
 `reports/`.
+
+The quant extension adds dynamic universe scanning:
+
+```bash
+python -m tradingagents.alpaca_daytrader universe-scan
+python -m tradingagents.alpaca_daytrader quant-once --dry-run
+python -m tradingagents.alpaca_daytrader quant-once --review
+python -m tradingagents.alpaca_daytrader quant-run --shadow
+```

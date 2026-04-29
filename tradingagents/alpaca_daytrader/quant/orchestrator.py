@@ -32,6 +32,7 @@ from tradingagents.alpaca_daytrader.quant.schemas import (
     QuantRunReport,
 )
 from tradingagents.alpaca_daytrader.quant.semantic_review import QuantOrchestrationAgent
+from tradingagents.alpaca_daytrader.quant.scoreboard import StrategyScoreboard
 from tradingagents.alpaca_daytrader.quant.stress import StressTester
 from tradingagents.alpaca_daytrader.quant.strategy_sleeves import StrategySleeve, default_sleeves
 from tradingagents.alpaca_daytrader.universe.discovery import UniverseDiscoveryEngine
@@ -76,6 +77,7 @@ class QuantOrchestrator:
         self.stress_tester = StressTester()
         self.no_trade_reasoner = NoTradeReasoner()
         self.trade_explainer = TradeExplainer()
+        self.scoreboard = StrategyScoreboard()
 
     def once(self, dry_run: bool = True, shadow: bool = False) -> QuantRunReport:
         adapter = self._adapter(dry_run)
@@ -115,6 +117,7 @@ class QuantOrchestrator:
             self.cost_model,
             run_config,
             regime,
+            {sleeve.name: self.scoreboard.reliability_multiplier(sleeve.name) for sleeve in self.sleeves},
         )
         risk = self.risk_box.apply(allocation, market, portfolio, run_config)
         stress = self.stress_tester.run(risk.feasible_book, covariance, market, run_config)

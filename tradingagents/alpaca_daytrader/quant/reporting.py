@@ -71,6 +71,10 @@ class QuantLogger:
 
 def render_markdown_report(report: QuantRunReport) -> str:
     active = report.allocation.diagnostics.get("active_sleeves", [])
+    focus_symbols = getattr(report.focus_list, "symbols", []) if report.focus_list else []
+    regime_label = getattr(report.market_regime, "label", "unknown") if report.market_regime else "unknown"
+    scanned_count = getattr(report.scan_result, "scanned_count", 0) if report.scan_result else 0
+    rejected_count = getattr(report.scan_result, "rejected_count", 0) if report.scan_result else 0
     warnings = (
         report.orthogonalized.diagnostics.warnings
         + report.execution_plan.warnings
@@ -85,6 +89,10 @@ def render_markdown_report(report: QuantRunReport) -> str:
         f"- Portfolio value: {report.portfolio_state.portfolio_value:.2f}",
         f"- Cash: {report.portfolio_state.cash:.2f}",
         f"- Market open: {report.market_state.market_open}",
+        f"- Market regime: {regime_label}",
+        f"- Symbols scanned: {scanned_count}",
+        f"- Symbols rejected: {rejected_count}",
+        f"- Focus list: {', '.join(focus_symbols) if focus_symbols else 'None'}",
         "",
         "## Active Sleeves",
         ", ".join(active) if active else "None",
@@ -108,9 +116,32 @@ def render_markdown_report(report: QuantRunReport) -> str:
             f"- Gross exposure: {report.risk.gross_exposure:.4f}",
             f"- Reason codes: {report.risk.reason_codes}",
             "",
+            "## Stress Tests",
+            f"- Passed: {getattr(report.stress_result, 'passed', 'unknown')}",
+            f"- Warnings: {getattr(report.stress_result, 'warnings', [])}",
+            "",
             "## Execution Summary",
             f"- Planned orders: {len(report.execution_plan.orders)}",
             f"- Dry run: {report.execution_plan.dry_run}",
+            "",
+            "## No-Trade Explanation",
+            f"- {getattr(report.no_trade, 'reasons', [])}",
+            "",
+            "## Trade Explanations",
+        ]
+    )
+    for explanation in report.trade_explanations:
+        lines.append(
+            f"- `{explanation.symbol}` {explanation.action}: {explanation.execution_choice}; "
+            f"risk={explanation.main_risk}"
+        )
+    if not report.trade_explanations:
+        lines.append("None")
+    lines.extend(
+        [
+            "",
+            "## Semantic Review",
+            f"- {report.semantic_commentary}",
             "",
             "## Warnings",
         ]

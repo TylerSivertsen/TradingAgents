@@ -26,6 +26,11 @@ flowchart TD
 
 ## Architecture
 
+Dynamic universe discovery now runs before ORIA, so the quant pipeline does not
+require hardcoded tickers. The system discovers tradable assets, scans for data
+quality/liquidity/spread/volatility/opportunity, builds a focus list, and only
+then runs the strategy sleeves.
+
 Strategy sleeves produce raw desired books. The initial sleeves are momentum,
 mean reversion, volatility breakout, optional pair spread, minimum variance,
 and cash/no-trade.
@@ -47,10 +52,13 @@ risk constraints are enforced by deterministic code.
 
 ```bash
 python -m tradingagents.alpaca_daytrader quant-once --dry-run
+python -m tradingagents.alpaca_daytrader quant-once --review
 python -m tradingagents.alpaca_daytrader quant-run --dry-run
+python -m tradingagents.alpaca_daytrader quant-run --shadow
 python -m tradingagents.alpaca_daytrader quant-once --execute
 python -m tradingagents.alpaca_daytrader quant-report
 python -m tradingagents.alpaca_daytrader quant-backtest --symbols AAPL,MSFT,NVDA --periods 180
+python -m tradingagents.alpaca_daytrader quant-walkforward --train-days 60 --test-days 10
 python -m tradingagents.alpaca_daytrader quant-diagnostics
 ```
 

@@ -25,6 +25,7 @@ class QuantAllocator:
         cost_model: CostModel,
         config: QuantConfig,
         regime: MarketRegime | None = None,
+        sleeve_multipliers: dict[str, float] | None = None,
     ) -> AllocationResult:
         utilities: list[SleeveUtility] = []
         positive_total = 0.0
@@ -38,11 +39,14 @@ class QuantAllocator:
             regime_multiplier = 1.0
             if regime is not None:
                 regime_multiplier = regime.recommended_sleeve_multipliers.get(book.strategy_name, 1.0)
+            if sleeve_multipliers is not None:
+                regime_multiplier *= sleeve_multipliers.get(book.strategy_name, 1.0)
             edge = book.expected_return * book.confidence * regime_multiplier
             uncertainty_penalty = 0.01 * max(book.uncertainty, 0.0)
             turnover_penalty = 0.0001 * max(book.turnover_estimate, 0.0)
             risk_penalty = 0.0001 * sum(abs(value) for value in book.target_weights.values())
-            net = edge - uncertainty_penalty - cost - turnover_penalty - risk_penalty
+            staleness_penalty = getattr(book, "staleness_penalty", 0.0)
+            net = edge - uncertainty_penalty - cost - turnover_penalty - risk_penalty - staleness_penalty
             active = book.active and net > 0 and book.strategy_name != "cash"
             if active:
                 positive_total += net

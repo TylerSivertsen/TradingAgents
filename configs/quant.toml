@@ -37,3 +37,19 @@ enabled = true
 
 [quant.sleeves.cash]
 enabled = true
+
+[universe]
+enabled = true
+source = "alpaca"
+max_scan_symbols = 3000
+max_focus_symbols = 25
+cache_dir = "data/universe"
+seed_symbols = []
+excluded_symbols = []
+min_price = 2.0
+max_price = 1000.0
+min_avg_daily_volume = 1000000
+min_intraday_volume = 100000
+max_spread_bps = 30
+min_atr_pct = 0.005
+max_atr_pct = 0.12

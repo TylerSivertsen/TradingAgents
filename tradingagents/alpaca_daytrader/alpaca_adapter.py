@@ -129,10 +129,10 @@ class DryRunAdapter:
                             datetime.now(timezone.utc) - timedelta(minutes=150 - idx)
                         ).isoformat(),
                         open=close - 0.1,
-                        high=close + 0.2,
-                        low=close - 0.2,
+                        high=close + 0.8,
+                        low=close - 0.8,
                         close=close,
-                        volume=1_000 + idx,
+                        volume=100_000 + idx * 100,
                     )
                 )
             bars[symbol] = series

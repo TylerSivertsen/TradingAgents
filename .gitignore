@@ -217,3 +217,9 @@ __marimo__/
 
 # Cache
 **/data_cache/
+
+# TradingAgents runtime output
+logs/
+reports/
+data/universe/
+experiments/results/*.json

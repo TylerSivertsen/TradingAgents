@@ -10,6 +10,7 @@ import numpy as np
 from tradingagents.alpaca_daytrader.models import MarketBar
 from tradingagents.alpaca_daytrader.quant.orchestrator import QuantOrchestrator
 from tradingagents.alpaca_daytrader.quant.schemas import MarketState, PortfolioState
+from tradingagents.alpaca_daytrader.universe.schemas import UniverseConfig
 
 
 class _BacktestAdapter:
@@ -33,7 +34,7 @@ class _BacktestAdapter:
         from tradingagents.alpaca_daytrader.models import MarketSnapshot
 
         return MarketSnapshot(
-            bars={symbol: self.bars[symbol][: self.index] for symbol in symbols},
+            bars={symbol: self.bars.get(symbol, [])[: self.index] for symbol in symbols},
             market_open=True,
         )
 
@@ -81,6 +82,13 @@ class QuantBacktester:
                 replace(orchestrator.quant_config, symbols=symbols),
                 adapter=adapter,
                 logger=orchestrator.logger,
+                universe_config=UniverseConfig(
+                    seed_symbols=symbols,
+                    max_scan_symbols=len(symbols),
+                    max_focus_symbols=len(symbols),
+                    min_intraday_volume=0,
+                    min_avg_daily_volume=0,
+                ),
             )
             report = test_orchestrator.once(dry_run=True)
             exposure = report.risk.gross_exposure
